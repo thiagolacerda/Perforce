@@ -36,36 +36,28 @@ def ConstructCommand(in_command):
     perforce_settings = sublime.load_settings('Perforce.sublime-settings')
     p4Env = perforce_settings.get('perforce_p4env')
     p4Path = perforce_settings.get('perforce_p4path')
-    if ( p4Path == None or p4Path == '' ):
-        p4Path = ''
+    p4config = perforce_settings.get('p4config')
+
     command = ''
-    if(p4Env and p4Env != ''):
-        command = '. {0} && {1}'.format(p4Env, p4Path)
-    elif(sublime.platform() == 'osx'):
-        command = '. ~/.bash_profile && {0}'.format(p4Path)
-    # Revert change until threading is fixed
-    # command = getPerforceConfigFromPreferences(command)
-    command += in_command
-    return command
+    if p4Env:
+        command = '. {0} && '.format(p4Env)
+    elif not p4Env and sublime.platform() != 'windows':
+        command = '. ~/.bash_profile && '
 
-def getPerforceConfigFromPreferences(command):
-    perforce_settings = sublime.load_settings('Perforce.sublime-settings')
+    if p4config:
+        exportCmd = ''
+        if sublime.platform() == 'windows':
+            exportCmd = 'SET P4CONFIG={0} && '.format(p4config)
+        else:
+            exportCmd = 'export P4CONFIG={0} && '.format(p4config)
 
-    # check to see if the sublime preferences include the given p4 config
-    # if it does, then add it to the command in the form 'var=value command'
-    # so that they get inserted into the environment the command runs in
-    def addP4Var(command, var):
-        p4var = perforce_settings.get(var)
-        if p4var:
-            if sublime.platform() == 'windows':
-                return command + 'SET {0}={1} && '.format(var, p4var)
-            return '{0}{1}={2} '.format(command, var, p4var)
-        return command
-    command = addP4Var(command, 'P4PORT')
-    command = addP4Var(command, 'P4CLIENT')
-    command = addP4Var(command, 'P4USER')
-    command = addP4Var(command, 'P4PASSWD')
-    return command
+        command = '{0}{1}'.format(command, exportCmd)
+
+    if p4Path == None:
+        p4Path = ''
+
+    return '{0}{1}{2}'.format(command, p4Path, in_command)
+
 
 def GetUserFromClientspec():
     command = ConstructCommand('p4 info')
