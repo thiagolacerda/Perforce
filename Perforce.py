@@ -35,7 +35,7 @@ perforceplugin_dir = os.getcwd()
 def ConstructCommand(in_command):
     perforce_settings = sublime.load_settings('Perforce.sublime-settings')
     p4Env = perforce_settings.get('perforce_p4env')
-    p4Path = perforce_settings.get('perforce_p4path')
+    p4Path = perforce_settings.get(sublime.platform()).get('perforce_p4path')
     p4config = perforce_settings.get('p4config')
 
     command = ''

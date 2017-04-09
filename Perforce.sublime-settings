@@ -7,7 +7,17 @@
 	"perforce_end_line_separator": "\n", // used to reconstruct the depot file after breaking it up to remove the first line
 	"perforce_log_warnings_to_status": true, // used to redirect logs to the status bar instead. The standard output is too big for the line (can be multi-line with the raw output of p4)
 	"perforce_default_graphical_diff_command": "p4diff \"%depotfile_path\" \"%file_path\" -l \"%file_name in depot\" -e -1 4", // used only if Select Graphical Diff Application is not called
+	// add the p4 binary path for each platform that you work with, in case p4 is not in your path, otherwise leave it blank
+	"osx": {
+		"perforce_p4path": ""
+	},
+	"linux": {
+		"perforce_p4path": ""
+	},
+	"windows": {
+		"perforce_p4path": ""
+	},
+
 	//"perforce_p4env": "~/.p4env", // optional environent file to source rather than ~/.bash_profile
-	//"perforce_p4path": "/usr/local/bin/", // optional path for p4 if symlink not available (e.g. OSX El Capitan cannot write to /usr/bin/)
 	//"p4config": ".p4config" // optional P4CONFIG file name to add more customization to the current workspace
 }
